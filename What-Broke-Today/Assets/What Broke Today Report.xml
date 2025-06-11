@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MercuryLinkTargetExport XMLVER="1" ExportType="Report" ExportDate="6/10/2025 10:44:19 PM" MercuryVersion="2024.3">
+  <Templates />
+  <Reports>
+    <RMSReport XMLVER="2" ReportGroup1Name="" ReportGroup2Name="" ReportType="Advanced" ReportClass="Admin" TargetRmsDbType="RMSData" LinkIdentifier="rpJHQHVVH4R0WFAZIHRSTWAG" DatabaseType="SQLServer" RMSTreeTopDataType="" LimitForDataCardinality="" IsAvailableToStudent="false">
+      <ReportName>What Broke Today</ReportName>
+      <ReportDescription></ReportDescription>
+      <Title>What Broke Today</Title>
+      <ParameterMappingSettings></ParameterMappingSettings>
+      <ReportDefinition><![CDATA[<Report DataSourceName="sqlDataSource1" Width="7.5in" Name="WhatBroke" xmlns="http://schemas.telerik.com/reporting/2023/3.0">
+  <DataSources>
+    <SqlDataSource QueryDesignerState="null" ParameterValues="null" ConnectionString="rmsreal" SelectCommand="with CTE_data as ( SELECT        r.pk_ID RunID, &#xD;&#xA;case r.TaskType &#xD;&#xA;when 0 then 'Mercury Interface' &#xD;&#xA;when 1 then 'Operation'&#xD;&#xA;when 3 then 'Mercury Base'&#xD;&#xA;end TaskType, &#xD;&#xA;case r.TaskSubType &#xD;&#xA;when 0 then 'Clear Expired Room Locks'&#xD;&#xA;when 1 then 'Mercury System Maintenance'&#xD;&#xA;when 501 then 'Export Bedspace Bookings ACD'&#xD;&#xA;when 502 then 'Export Plans ACD'&#xD;&#xA;when 504 then 'Export Finance'&#xD;&#xA;when 506 then 'Import Profile'&#xD;&#xA;when 511 then 'Import Multi-Apps'&#xD;&#xA;when 512 then 'Import Transactions'&#xD;&#xA;when 514 then 'Import Bookings' &#xD;&#xA;when 516 then 'Import Plans'&#xD;&#xA;when 15 then 'Update Fields - Profile/Application'&#xD;&#xA;when 16 then 'Correspondence'&#xD;&#xA;when 17 then 'Plans - Delete'&#xD;&#xA;when 37 then 'Application Create'&#xD;&#xA;when 44 then 'Fee Assessment'&#xD;&#xA;when 47 then 'Bedspace Booking - Update'&#xD;&#xA;when 551 then 'Custom Dataset Process'&#xD;&#xA;when 575 then 'Email Mercury User Send'&#xD;&#xA;else 'Unknown'&#xD;&#xA;end TaskSubType, &#xD;&#xA;r.TaskName, r.TaskIdentifier, &#xD;&#xA; r.RunToPause, r.IsPaused, &#xD;&#xA;r.RunDate, r.RunResult, r.RequestedByType, r.RequestedByDetail, d.pk_ID DetailID, &#xD;&#xA;                         d.fk_TaskRunID, d.LogDate DetailLogDate, case d.LogLevel when 0 then 'Normal' when 1 then 'Warning' when 2 then 'Error' end DetailLogLevel, d.Detail,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;case t1.LogStatus &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when 0 then 'Successful' &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when 1 then 'Warning'&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when 2 then 'Error'&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;end RunStatus,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;t1.LogStatus,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;dense_rank() over (Partition by r.tasktype, r.tasksubtype, r.taskname order by r.rundate) RankofRows&#xD;&#xA;FROM            MSYS_MercuryTaskRuns AS r &#xD;&#xA;LEFT OUTER JOIN&#xD;&#xA;                         LOG_TaskExecutionDetail AS d ON r.pk_ID = d.fk_TaskRunID&#xD;&#xA;left join (SELECT        fk_TaskRunID, max(LogLevel) LogStatus&#xD;&#xA;                               FROM            LOG_TaskExecutionDetail AS d&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   where d.LogDate &gt;= DATEADD(day, - 1, CONVERT(date, GETDATE()))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   group by fk_TaskRunID) t1 on r.pk_ID=t1.fk_TaskRunID&#xD;&#xA;WHERE        r.TaskIdentifier IN&#xD;&#xA;                             (&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; SELECT       r2.TaskIdentifier&#xD;&#xA;                               FROM            LOG_TaskExecutionDetail AS d2&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   inner join MSYS_MercuryTaskRuns r2 on d2.fk_TaskRunID=r2.pk_ID&#xD;&#xA;                               WHERE        d2.LogLevel &gt;= 1 AND d2.LogDate &gt;= DATEADD(day, - 1, CONVERT(date, GETDATE()))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   ) AND r.RunDate &gt;= DATEADD(day, - 1, CONVERT(date, GETDATE())))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   , CTE_Groups as (&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   select d.TaskType, d.TaskSubType, d.TaskName, d.TaskIdentifier, d.RunDate, d.RunStatus, d.RunID,&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   min(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   case when d.RunStatus in ('Warning', 'Error') then d.rundate when d.RunStatus&lt;&gt;afterdata.RunStatus then afterdata.RunDate else getdate() end&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   ) groupStart &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   from CTE_data d&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   left join CTE_data afterdata on  d.TaskIdentifier=afterdata.TaskIdentifier and afterdata.RunDate&gt;=d.RunDate&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   group by d.TaskType, d.TaskSubType, d.TaskName, d.TaskIdentifier, d.RunDate, d.RunStatus, d.RunID)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   , CTE_Combined as (select g.TaskType, g.TaskSubType, g.TaskName, g.TaskIdentifier, groupStart, RunStatus, min(RunDate) GroupDate from CTE_Groups g&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   group by g.TaskType, g.TaskSubType, g.TaskName, g.TaskIdentifier, RunStatus, groupStart) &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   select d.*, c.GroupDate from CTE_data d&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   left join CTE_Groups g on d.RunID=g.RunID&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   left join CTE_Combined c on g.TaskIdentifier=c.TaskIdentifier and g.groupStart=c.groupStart and g.RunStatus=c.RunStatus" Name="sqlDataSource1" />
+  </DataSources>
+  <Items>
+    <PageHeaderSection Height="0.6in" Name="pageHeaderSection1">
+      <Items>
+        <TextBox Width="7.5in" Height="0.3in" Left="0in" Top="0in" Value="What Broke Today?" Name="textBox9">
+          <Style TextAlign="Center" VerticalAlign="Middle">
+            <Font Size="18pt" Bold="True" />
+          </Style>
+        </TextBox>
+      </Items>
+    </PageHeaderSection>
+    <DetailSection Height="0.2in" Name="detailSection1">
+      <Style Visible="False" />
+      <Items>
+        <TextBox Width="1.5in" Height="0.2in" Left="0.6in" Top="0in" Value="= Fields.DetailLogDate" Format="{0:G}" Name="textBox6">
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Color="Orange" />
+              <Filters>
+                <Filter Expression="= Fields.DetailLogLevel" Operator="Equal" Value="=&quot;Warning&quot;" />
+              </Filters>
+            </FormattingRule>
+            <FormattingRule>
+              <Style Color="Red" />
+              <Filters>
+                <Filter Expression="= Fields.DetailLogLevel" Operator="Equal" Value="=&quot;Error&quot;" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </TextBox>
+        <TextBox Width="4.7in" Height="0.2in" Left="2.8in" Top="0in" Value="= Fields.Detail" Name="textBox7">
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Color="Orange" />
+              <Filters>
+                <Filter Expression="= Fields.DetailLogLevel" Operator="Equal" Value="=&quot;Warning&quot;" />
+              </Filters>
+            </FormattingRule>
+            <FormattingRule>
+              <Style Color="Red" />
+              <Filters>
+                <Filter Expression="= Fields.DetailLogLevel" Operator="Equal" Value="=&quot;Error&quot;" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </TextBox>
+        <TextBox Width="0.7in" Height="0.2in" Left="2.1in" Top="0in" Value="= Fields.DetailLogLevel" Name="textBox8">
+          <ConditionalFormatting>
+            <FormattingRule>
+              <Style Color="Orange" />
+              <Filters>
+                <Filter Expression="= Fields.DetailLogLevel" Operator="Equal" Value="=&quot;Warning&quot;" />
+              </Filters>
+            </FormattingRule>
+            <FormattingRule>
+              <Style Color="Red" />
+              <Filters>
+                <Filter Expression="= Fields.DetailLogLevel" Operator="Equal" Value="=&quot;Error&quot;" />
+              </Filters>
+            </FormattingRule>
+          </ConditionalFormatting>
+        </TextBox>
+      </Items>
+    </DetailSection>
+    <PageFooterSection Height="0.4in" Name="pageFooterSection1">
+      <Items>
+        <TextBox Width="1.9in" Height="0.2in" Left="5.6in" Top="0.2in" Value="=&quot;Page: &quot;+ PageNumber+&quot; of &quot;+ PageCount" Name="textBox10">
+          <Style TextAlign="Right" VerticalAlign="Middle" />
+        </TextBox>
+      </Items>
+    </PageFooterSection>
+  </Items>
+  <PageSettings PaperKind="Letter" Landscape="False" ColumnCount="1" ColumnSpacing="0in">
+    <Margins>
+      <MarginsU Left="0.5in" Right="0.5in" Top="0.5in" Bottom="0.5in" />
+    </Margins>
+  </PageSettings>
+  <StyleSheet>
+    <StyleRule>
+      <Style>
+        <Padding Left="2pt" Right="2pt" />
+      </Style>
+      <Selectors>
+        <TypeSelector Type="TextItemBase" />
+        <TypeSelector Type="HtmlTextBox" />
+      </Selectors>
+    </StyleRule>
+  </StyleSheet>
+  <Sortings>
+    <Sorting Expression="= Fields.DetailLogDate" Direction="Asc" />
+    <Sorting Expression="= Fields.DetailID" Direction="Asc" />
+  </Sortings>
+  <Groups>
+    <Group Name="Task Type">
+      <GroupHeader>
+        <GroupHeaderSection Height="0.3in" Name="groupHeaderSection">
+          <Items>
+            <TextBox Width="2.5in" Height="0.2in" Left="0in" Top="0in" Value="= &quot;Task Type: &quot;+ Fields.TaskType" Name="textBox1">
+              <Style>
+                <Font Bold="True" />
+              </Style>
+            </TextBox>
+          </Items>
+        </GroupHeaderSection>
+      </GroupHeader>
+      <GroupFooter>
+        <GroupFooterSection Height="0.3in" Name="groupFooterSection">
+          <Style Visible="False" />
+        </GroupFooterSection>
+      </GroupFooter>
+      <Groupings>
+        <Grouping Expression="= Fields.TaskType" />
+      </Groupings>
+      <Sortings>
+        <Sorting Expression="= Fields.TaskType" Direction="Asc" />
+      </Sortings>
+    </Group>
+    <Group Name="Task Sub Type">
+      <GroupHeader>
+        <GroupHeaderSection Height="0.3in" Name="groupHeaderSection1">
+          <Items>
+            <TextBox Width="2.5in" Height="0.2in" Left="0.3in" Top="0in" Value="= &quot;Task Subtype: &quot;+ Fields.TaskSubType" Name="textBox2">
+              <Style>
+                <Font Bold="True" />
+              </Style>
+            </TextBox>
+          </Items>
+        </GroupHeaderSection>
+      </GroupHeader>
+      <GroupFooter>
+        <GroupFooterSection Height="0.3in" Name="groupFooterSection1">
+          <Style Visible="False" />
+        </GroupFooterSection>
+      </GroupFooter>
+      <Groupings>
+        <Grouping Expression="= Fields.TaskSubType" />
+      </Groupings>
+      <Sortings>
+        <Sorting Expression="= Fields.TaskSubType" Direction="Asc" />
+      </Sortings>
+    </Group>
+    <Group Name="Task Name/Identifier">
+      <GroupHeader>
+        <GroupHeaderSection Height="0.2in" Name="groupHeaderSection2">
+          <Items>
+            <TextBox Width="2.5in" Height="0.2in" Left="0.6in" Top="0in" Value="= &quot;Task: &quot;+ Fields.TaskName" Name="textBox3">
+              <Style>
+                <Font Bold="True" />
+              </Style>
+            </TextBox>
+          </Items>
+        </GroupHeaderSection>
+      </GroupHeader>
+      <GroupFooter>
+        <GroupFooterSection Height="0.1in" Name="groupFooterSection2">
+          <Style Visible="True" />
+        </GroupFooterSection>
+      </GroupFooter>
+      <Groupings>
+        <Grouping Expression="= Fields.TaskName" />
+        <Grouping Expression="= Fields.TaskIdentifier" />
+      </Groupings>
+      <Sortings>
+        <Sorting Expression="= Fields.TaskName" Direction="Asc" />
+      </Sortings>
+    </Group>
+    <Group Name="GroupDate">
+      <GroupHeader>
+        <GroupHeaderSection Height="0.2in" Name="groupHeaderSection4">
+          <Items>
+            <TextBox Width="1.5in" Height="0.2in" Left="0in" Top="0in" Value="= Fields.RunStatus" Name="textBox11">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Color="Green" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Successful&quot;" />
+                  </Filters>
+                </FormattingRule>
+                <FormattingRule>
+                  <Style Color="Orange" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Warning&quot;" />
+                  </Filters>
+                </FormattingRule>
+                <FormattingRule>
+                  <Style Color="Red" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Error&quot;" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+              <Action>
+                <ToggleVisibilityAction DisplayExpandedMark="False">
+                  <Targets>
+                    <Target ItemName="groupHeaderSection3" />
+                  </Targets>
+                </ToggleVisibilityAction>
+              </Action>
+            </TextBox>
+            <TextBox Width="0.6in" Height="0.2in" Left="1.5in" Top="0in" Value="= CountDistinct(Fields.RunID)" Name="textBox12" />
+            <TextBox Width="1.5in" Height="0.2in" Left="2.3in" Top="0in" Value="= Min(Fields.RunDate)" Name="textBox13" />
+            <TextBox Width="1.5in" Height="0.2in" Left="3.8in" Top="0in" Value="= Max(Fields.RunDate)" Name="textBox14" />
+          </Items>
+        </GroupHeaderSection>
+      </GroupHeader>
+      <GroupFooter>
+        <GroupFooterSection Height="0.3in" Name="groupFooterSection4">
+          <Style Visible="False" />
+        </GroupFooterSection>
+      </GroupFooter>
+      <Groupings>
+        <Grouping Expression="= Fields.GroupDate" />
+      </Groupings>
+      <Sortings>
+        <Sorting Expression="= Fields.GroupDate" Direction="Asc" />
+      </Sortings>
+    </Group>
+    <Group Name="Task Run">
+      <GroupHeader>
+        <GroupHeaderSection Height="0.2in" Name="groupHeaderSection3">
+          <Style Visible="False" />
+          <Items>
+            <TextBox Width="1.8in" Height="0.2in" Left="0.3in" Top="0in" Value="= Fields.RunDate" Format="{0:G}" Name="textBox4">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Color="Green" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Successful&quot;" />
+                  </Filters>
+                </FormattingRule>
+                <FormattingRule>
+                  <Style Color="Orange" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Warning&quot;" />
+                  </Filters>
+                </FormattingRule>
+                <FormattingRule>
+                  <Style Color="Red" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Error&quot;" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+              <Action>
+                <ToggleVisibilityAction DisplayExpandedMark="False">
+                  <Targets>
+                    <Target ItemName="detailSection1" />
+                  </Targets>
+                </ToggleVisibilityAction>
+              </Action>
+            </TextBox>
+            <TextBox Width="1.8in" Height="0.2in" Left="2.1in" Top="0in" Value="= Fields.RunStatus" Name="textBox5">
+              <ConditionalFormatting>
+                <FormattingRule>
+                  <Style Color="Green" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Successful&quot;" />
+                  </Filters>
+                </FormattingRule>
+                <FormattingRule>
+                  <Style Color="Orange" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Warning&quot;" />
+                  </Filters>
+                </FormattingRule>
+                <FormattingRule>
+                  <Style Color="Red" />
+                  <Filters>
+                    <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Error&quot;" />
+                  </Filters>
+                </FormattingRule>
+              </ConditionalFormatting>
+            </TextBox>
+          </Items>
+        </GroupHeaderSection>
+      </GroupHeader>
+      <GroupFooter>
+        <GroupFooterSection Height="0.3in" Name="groupFooterSection3">
+          <Style Visible="False" />
+        </GroupFooterSection>
+      </GroupFooter>
+      <Groupings>
+        <Grouping Expression="= Fields.RunDate" />
+        <Grouping Expression="= Fields.RunID" />
+      </Groupings>
+      <Sortings>
+        <Sorting Expression="= Fields.RunDate" Direction="Asc" />
+      </Sortings>
+    </Group>
+  </Groups>
+  <ConditionalFormatting>
+    <FormattingRule>
+      <Style Color="Green" />
+      <Filters>
+        <Filter Expression="= Fields.RunStatus" Operator="Equal" Value="=&quot;Success&quot;" />
+      </Filters>
+    </FormattingRule>
+  </ConditionalFormatting>
+</Report>]]></ReportDefinition>
+    </RMSReport>
+  </Reports>
+  <DynamicLists />
+  <Operations />
+  <Resources>
+    <GlobalStyles />
+    <GlobalFilters />
+    <EmailMessages />
+    <SMSMessages />
+    <Schedules />
+    <RoommateGroupTypes />
+    <Group1 />
+    <Group2 />
+    <InspectionDefinitions />
+    <InspectionFields />
+    <GlobalLabels />
+    <InspectionFieldOrgGroups />
+    <InspectionRatingLists />
+    <CustomFields />
+    <CustomFieldDispGroups />
+    <CustomEntities />
+  </Resources>
+</MercuryLinkTargetExport>
