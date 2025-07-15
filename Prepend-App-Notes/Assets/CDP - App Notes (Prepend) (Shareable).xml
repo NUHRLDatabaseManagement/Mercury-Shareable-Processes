@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MercuryLinkTargetExport XMLVER="1" ExportType="StaticProcess" ExportDate="7/15/2025 12:17:49 PM" MercuryVersion="2024.3">
+  <Templates />
+  <Reports />
+  <DynamicLists />
+  <Operations>
+    <Operation Name="CDP - App Notes (Prepend) (Shareable)" Title="CDP: App Notes (Prepend)" LinkIdentifier="pcXXACN6JOQEWUKLLNUJVY3Q" BasisLinkIdentifier="CustomDatasetProcess" Description="" ProcessConfigType="551" Group1Name="" Group2Name="">
+      <businessRulesSettings>
+        <Settings TreeTopEffectiveModelName="Application" LimitForDataCardinality="1" ActingRMSDBType="2">
+          <sqlDefinition>UPDATE       pple_t_Application
+SET                Appl_Notes = case when Appl_Notes is null or LEN(CAST(Appl_Notes AS VARCHAR))=0 then '[[TEXT-B5ID8E3KY7]]' else concat('[[TEXT-B5ID8E3KY7]]', char(10), appl_notes) end
+where PK_APPLICATION_NO in ([[LFD:Applications:ApplicationNumbers]])</sqlDefinition>
+          <Prompts>
+            <Prompt XMLVER="1" FilterPromptType="0" PromptToken="TEXT-B5ID8E3KY7" PromptCaption="Text to Add" ListEntrySQLStatement="" RMSDBType="2" DefaultValue="Blah Blah Blah. - RCE XX/XX/XXXX" />
+          </Prompts>
+          <ProcessConfigItem DataSelectionType="0" DisplayConfirmationSetting="0" ConfirmationMessageText="You are about to run this operation for [[RecordsAffected]] [[FieldName]]. Continue?">
+            <EmailSettings>
+              <ListOfConditionalItems XMLVER="1" />
+            </EmailSettings>
+            <SMSSettings>
+              <ListOfConditionalItems XMLVER="1" />
+            </SMSSettings>
+            <DataSelectionConditionList>
+              <ConditionList ConditionEngineSetEvaluationTypeEnum="0" />
+            </DataSelectionConditionList>
+            <ProcessConfigDataSettings>
+              <DataSettings XMLVER="3" EasyFeatureDataSettingsUsage="Do_not_use" AvailableTo="PeopleAndStaff" AllowLoginBy="NoLoginAllowed">
+                <EasyFeatureDataSettingsTTTInfo />
+                <Person PersonData="Update_existing" AllowResume="false" StaffPersonSelection="SelectIfNoneSelected" PersonModel="Student" />
+                <RoomBooking RoomBookingDataSetting="Do_not_use" />
+                <RoomBrowsing RoomBrowsingDataSetting="Do_not_use" />
+                <PlanBooking PlanBookingDataSetting="Do_not_use" />
+                <BookingPeriodConfig>
+                  <BookingPeriodConfig XMLVER="2" BookingPeriodType="Term" BookingTermSelectionAllowedValueType="Selected" BookingPeriodUpdateExistingSelectionType="All" BookingPeriodStartFrom="" BookingPeriodStartTo="" BookingPeriodDefaultStart="" BookingPeriodEndFrom="" BookingPeriodEndTo="" BookingPeriodDefaultEnd="" BookingPeriodStartSelectableDateType="PickDate" BookingPeriodStartDateOffset="0" BookingPeriodStartDateOffsetPosNeg="Plus" BookingPeriodEndSelectableDateType="PickDate" BookingPeriodEndDateOffset="0" BookingPeriodEndDateOffsetPosNeg="Plus" PersonMustBookInSame="None" PersonMustBookInSameRoomType="Any" PersonMustHaveBookingDate="" PersonMustHaveBooking="false" BookingEligibility="Exactly_Match" RoomBookingRequired="true" OverlappingBookingAllowed="false">
+                    <SpecialDates>
+                      <StartFrom>
+                        <SpecialDateSettings SelectableDateType="0" SpecialDateTime="" SpecialDateOffset="0" SpecialDatePosNegType="0" />
+                      </StartFrom>
+                      <StartTo>
+                        <SpecialDateSettings SelectableDateType="0" SpecialDateTime="" SpecialDateOffset="0" SpecialDatePosNegType="0" />
+                      </StartTo>
+                      <StartDefault>
+                        <SpecialDateSettings SelectableDateType="0" SpecialDateTime="" SpecialDateOffset="0" SpecialDatePosNegType="0" />
+                      </StartDefault>
+                      <EndFrom>
+                        <SpecialDateSettings SelectableDateType="0" SpecialDateTime="" SpecialDateOffset="0" SpecialDatePosNegType="0" />
+                      </EndFrom>
+                      <EndTo>
+                        <SpecialDateSettings SelectableDateType="0" SpecialDateTime="" SpecialDateOffset="0" SpecialDatePosNegType="0" />
+                      </EndTo>
+                      <EndDefault>
+                        <SpecialDateSettings SelectableDateType="0" SpecialDateTime="" SpecialDateOffset="0" SpecialDatePosNegType="0" />
+                      </EndDefault>
+                    </SpecialDates>
+                    <TermList />
+                    <AssocBookingLiveSettings>
+                      <AssocBookTermForDateLivePick AllowableValueType="2">
+                        <SelectedTerms />
+                      </AssocBookTermForDateLivePick>
+                    </AssocBookingLiveSettings>
+                  </BookingPeriodConfig>
+                </BookingPeriodConfig>
+                <Application ApplicationData="Update_existing" ApplicationPeriodSelectionType="Selected" ApplicationCancelStatus="Do_not_allow">
+                  <AllowedApplicationPeriods />
+                </Application>
+                <MaintenanceRequest MaintenanceRequestData="Do_not_use" MaintReqLivingAreaLevel="None" />
+                <MaintReqExisting MaintReqExistingData="Do_not_use" MaintReqExistingStartDate="" MaintReqExistingEndDate="" />
+                <Inspection InspectionDataSetting="Do_not_use" InspectionId="0" />
+                <InspExisting InspExistingData="Do_not_use" InspExistingStartDate="" InspExistingEndDate="" />
+                <FlagPerson FlagPersonData="Do_not_use" />
+                <Flag FlagData="Do_not_use" />
+                <PersonHistory PersonHistoryData="Do_not_use" />
+                <WaitlistPerson WaitlistPersonData="Do_not_use" />
+                <Waitlist WaitlistData="Do_not_use" />
+                <ConferenceSystemsSetting SystemSetting="DoNotUse" />
+                <Conferences ConferencesData="Do_not_use">
+                  <ConferencesConfigSettings>
+                    <MySettings ConfSeasonSelectionType="Default" />
+                  </ConferencesConfigSettings>
+                </Conferences>
+                <ConferenceQuotes ConferencesQuotesData="Do_not_use">
+                  <ConferencesQuotesConfigSettings>
+                    <MySettings ConfSeasonSelectionType="Default" />
+                  </ConferencesQuotesConfigSettings>
+                </ConferenceQuotes>
+                <ConferenceRequest ConferencesRequestData="Do_not_use">
+                  <ConferencesRequestConfigSettings>
+                    <MySettings ConfSeasonSelectionType="Default" />
+                  </ConferencesRequestConfigSettings>
+                </ConferenceRequest>
+                <ECSConfSystemsSetting SystemSetting="DoNotUse" />
+                <ConferenceOrganization ConferenceOrganizationData="Do_not_use" />
+                <RoomAssignment RoomAssignData="Do_not_use" RoomAssignStartDate="" RoomAssignEndDate="" RoomAssignOverlapVal="OverlapRange" />
+                <PlanAssignment PlanAssignData="Do_not_use" PlanAssignStartDate="" PlanAssignEndDate="" PlanAssignOverlapVal="OverlapRange" />
+                <Ledger LedgerDataSetting="Do_not_use" LedgerTaskType="NULL" AllowChangeForFeeAssessedBookings="false" />
+                <Schedule ScheduleDataSetting="Do_not_use" ScheduleDataList="" />
+                <NamedRoommateGroupID ID="0" />
+                <MovingScheduleTypeID ID="0" />
+                <ConferenceAttendeeSettings AttendeeConferenceBookingSelectionType="AllActive">
+                  <AllowedAttendeeConferenceBookings />
+                </ConferenceAttendeeSettings>
+              </DataSettings>
+            </ProcessConfigDataSettings>
+            <RMSTreeTopInfo>
+              <RMSTTTInfoItem TTT="102" CustomEntityDefModel="" />
+            </RMSTreeTopInfo>
+          </ProcessConfigItem>
+        </Settings>
+      </businessRulesSettings>
+    </Operation>
+  </Operations>
+  <Resources>
+    <GlobalStyles />
+    <GlobalFilters />
+    <EmailMessages />
+    <SMSMessages />
+    <Schedules />
+    <RoommateGroupTypes />
+    <Group1 />
+    <Group2 />
+    <InspectionDefinitions />
+    <InspectionFields />
+    <GlobalLabels />
+    <InspectionFieldOrgGroups />
+    <InspectionRatingLists />
+    <CustomFields />
+    <CustomFieldDispGroups />
+    <CustomEntities />
+  </Resources>
+</MercuryLinkTargetExport>
